@@ -3,11 +3,11 @@ const router = express.Router();
 const structjson = require('./structjson.js');
 
 const dialogflow = require('dialogflow');
-const uuid = require('uuid');
+// const uuid = require('uuid');
 
-const config = require('../config/keys.js')
+const config = require('../config/keys');
 const projectId = config.googleProjectID
-const sessionId = config.dialogflowSessionID
+const sessionId = config.dialogFlowSessionID
 const languageCode = config.dialogFlowSessionLanguageCode
 
 

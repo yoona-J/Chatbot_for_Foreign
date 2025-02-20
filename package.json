@@ -1,7 +1,7 @@
 {
-  "name": "Chatbot-for-Foreign",
+  "name": "ChatbotForForeign",
   "version": "1.0.0",
-  "description": "Chatbot for KOrean Foreign",
+  "description": "Chatbot for Korean Foreign",
   "main": "index.js",
   "engines": {
     "node": "10.15.0",
