@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { saveMessage } from '../_actions/message_actions'
 import Message from './Sections/Message';
+import UniqueMessage from './Sections/UniqueMessage';
 
 function Chatbot() {
     const dispatch = useDispatch();
@@ -42,7 +43,7 @@ function Chatbot() {
             const response = await Axios.post('/api/dialogflow/textQuery', textQueryVariables)
 
             for (let content of response.data.fulfillmentMessages) {
-                let conversation = {
+                conversation = {
                     who: 'bot',
                     content: content
                 }
@@ -114,7 +115,14 @@ function Chatbot() {
     // show one message
     const renderOneMessage = (message, index) => {
         console.log('message', message)
-        return <Message key={ index } who={ message.who } text={message.content.text.text} />
+        // giving condition here to separate message kinds
+        if (message.content && message.content.text && message.content.text.text) {
+            // normal text
+            return <Message key={index} who={message.who} text={message.content.text.text} />
+        } else if (message.content && message.content.payload.fields.card) {
+            // custom text
+            return <UniqueMessage key={index} who={message.who} text={message.content.text.text} />
+        }
     }
 
     // show message texts
@@ -123,6 +131,8 @@ function Chatbot() {
             return returnMessages.map((message, index) => {
                 return renderOneMessage(message, index);
             })
+        } else {
+            return null;
         }
     }
 
