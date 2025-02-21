@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const structjson = require('./structjson.js');
-
 const dialogflow = require('dialogflow');
-// const uuid = require('uuid');
-
 const config = require('../config/keys');
+
 const projectId = config.googleProjectID
 const sessionId = config.dialogFlowSessionID
 const languageCode = config.dialogFlowSessionLanguageCode
@@ -14,6 +12,10 @@ const languageCode = config.dialogFlowSessionLanguageCode
 // Create a new session
 const sessionClient = new dialogflow.SessionsClient();
 const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+
+//=================================
+//           DialogFlow
+//=================================
 
 // making Two route
 // text Query route

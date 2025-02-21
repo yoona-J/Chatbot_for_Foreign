@@ -4,16 +4,21 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const config = require("./server/config/keys");
-// const mongoose = require("mongoose");
-// mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log('MongoDB Connected...'))
-//   .catch(err => console.log(err));
+
+const mongoose = require("mongoose");
+mongoose.connect(config.mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log("MongoDB Connected..."))
+  .catch((err) => console.log(err));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
 app.use('/api/dialogflow', require('./server/routes/dialogflow'));
+app.use('/api/user', require('./server/routes/users'));
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {

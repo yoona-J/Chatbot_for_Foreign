@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -9,6 +9,9 @@ import UniqueMessage from './Sections/UniqueMessage';
 function Chatbot() {
     const dispatch = useDispatch();
     const messagesFromRedux = useSelector(state => state.message.messages)
+
+    const [Name, setName] = useState('');
+    const [Email, setEmail] = useState('');
 
     // make first response that user don't chat. just basic response from chatbot
     useEffect(() => {
@@ -33,7 +36,6 @@ function Chatbot() {
         console.log('user text', conversation)
 
         // 2. take care of chatbot message
-
         const textQueryVariables = {
             text: text,
         }
@@ -41,7 +43,8 @@ function Chatbot() {
         try {
             //send request to textQuery route
             const response = await Axios.post('/api/dialogflow/textQuery', textQueryVariables)
-
+            console.log('full data', response.data)
+            
             for (let content of response.data.fulfillmentMessages) {
                 conversation = {
                     who: 'bot',
@@ -50,7 +53,17 @@ function Chatbot() {
                 dispatch(saveMessage(conversation))
             }
 
+            // req user information
+            if (response.data.allRequiredParamsPresent === true && response.data.parameters.fields.email) {
+                if (response.data.parameters.fields.email.stringValue !== '' && response.data.parameters.fields.name.structValue.fields.name.stringValue !== '') {
+                    console.log('success')
+                    setName(response.data.parameters.fields.name.structValue.fields.name.stringValue)
+                    setEmail(response.data.parameters.fields.email.stringValue)
+                }
+            } else return;
+
         } catch (error) {
+            console.log('from text', error)
             conversation = {
                 who: 'bot',
                 content: {
@@ -65,9 +78,25 @@ function Chatbot() {
         }
     }
 
+    
+    if (Name && Email) {
+        // console.log('Name', Name, 'Email', Email)
+        const body = {
+            name: Name,
+            email: Email
+        }
+        console.log('body', body)
+
+        Axios.post('/api/user/register', body)
+            .then(response => {
+                console.log('resres', response)
+                if (response.status === 200) console.log('회원 저장')
+                else console.log('DB 저장 안됨')
+            })
+    } else console.log('is not available')
+
     // EventQuery Func
     const eventQuery = async (event) => {
-
 
         // event query don't need to take care of sending message. so just make only chatbot message query
         const eventQueryVariables = {
@@ -87,6 +116,7 @@ function Chatbot() {
             }
 
         } catch (error) {
+            console.log('from event', error)
             let conversation = {
                 who: 'bot',
                 content: {
@@ -114,7 +144,7 @@ function Chatbot() {
 
     // show one message
     const renderOneMessage = (message, index) => {
-        console.log('message', message)
+        // console.log('message', message)
         // giving condition here to separate message kinds
         if (message.content && message.content.text && message.content.text.text) {
             // normal text
