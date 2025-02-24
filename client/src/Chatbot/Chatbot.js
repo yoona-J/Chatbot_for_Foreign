@@ -167,11 +167,22 @@ function Chatbot() {
     }
 
     return (
-        <div style={{ height: 700, width: 700, border: '3px solid black', borderRadius: '7px' }}>
-            <div style={{ height: 644, width: '100%', overflow: 'auto' }}>
-                {renderMessages(messagesFromRedux)}
+        // <div style={{ height: 700, width: 700, border: '3px solid black', borderRadius: '7px' }}>
+        //     <div style={{ height: 644, width: '100%', overflow: 'auto' }}>
+        //         {renderMessages(messagesFromRedux)}
+        //     </div>
+        //     <input style={{margin: 0, width: '100%', height: 50, borderRadius: '4px', padding: '5px', fontSize: '1rem' }} placeholder='Send a message' onKeyPress={keyPressHandler} type='text' />
+        // </div>
+        <div style={{ width: '100%', height: '100%'}}>
+            <div style={{ width: '100%', margin: '0px auto' }}>
+                <div style={{ width: '100px', height: '40px', borderRadius: '10px', border: '2px solid #FFF' }}>
+                    
+                </div>
+                <div className='chatbot_main_container'>
+                    {renderMessages(messagesFromRedux)}
+                    <input style={{margin: 0, width: '100%', height: 50, borderRadius: '4px', padding: '5px', fontSize: '1rem' }} placeholder='Send a message' onKeyPress={keyPressHandler} type='text' />
+                </div>
             </div>
-            <input style={{margin: 0, width: '100%', height: 50, borderRadius: '4px', padding: '5px', fontSize: '1rem' }} placeholder='Send a message' onKeyPress={keyPressHandler} type='text' />
         </div>
     )
 }
